@@ -47,6 +47,7 @@ int main() {
     SetTargetFPS(60);
     // Game loop
     while(WindowShouldClose() == false) {
+        SetConfigFlags(FLAG_FULLSCREEN_MODE);  
         
         // Event handling
         
@@ -54,51 +55,23 @@ int main() {
         std::cout << "Test" << std::endl;
         std::cout << ballY << " " << ballX << std::endl;
 
+        // movement
+        if(IsKeyDown(KEY_A)) { std::cout << "Pressed A" << std::endl; ballX -= speed; }
+        if(IsKeyDown(KEY_W)) { std::cout << "Pressed W" << std::endl; ballY -= speed; }
+        if(IsKeyDown(KEY_D)) { std::cout << "Pressed D" << std::endl; ballX += speed; }
+        if(IsKeyDown(KEY_S)) { std::cout << "Pressed S" << std::endl; ballY += speed; }
 
-        if(IsKeyDown(KEY_A))
-        {
-            std::cout << "Pressed A" << std::endl;
-            ballX -= speed;
+        // sprint
+        if(IsKeyDown(KEY_W) && IsKeyDown(KEY_LEFT_SHIFT)) { ballY -= speed +2; }
+        if(IsKeyDown(KEY_A) && IsKeyDown(KEY_LEFT_SHIFT)) { ballX -= speed +2; }
+        if(IsKeyDown(KEY_S) && IsKeyDown(KEY_LEFT_SHIFT)) { ballY += speed +2; }
+        if(IsKeyDown(KEY_D) && IsKeyDown(KEY_LEFT_SHIFT)) { ballX += speed +2; }
 
-        }
-        if(IsKeyDown(KEY_W))
-        {
-            std::cout << "Pressed W" << std::endl;
-            ballY -= speed;
-        }
-        if(IsKeyDown(KEY_D))
-        {
-            std::cout << "Pressed D" << std::endl;
-            ballX += speed;
-        }
-        if(IsKeyDown(KEY_S))
-        {
-            std::cout << "Pressed S" << std::endl;
-            ballY += speed;
-        }
-
-        
-        if(IsKeyDown(KEY_W) && IsKeyDown(KEY_LEFT_SHIFT))
-        {
-            ballY -= speed +5;
-        }
-
-
-        if(ballX <= death){
-            ballX = screen_width;
-        }
-
-        else if(ballX >= screen_width){
-            ballX = death;
-        }
-
-        else if(ballY <= death){
-            ballY = screen_height;
-        }
-
-        else if(ballY >= screen_height){
-            ballY = death;
-        }
+        // border
+        if(ballX <= death) { ballX = screen_width; }
+        else if(ballX >= screen_width) { ballX = death; }
+        else if(ballY <= death) { ballY = screen_height; }
+        else if(ballY >= screen_height) { ballY = death; }
 
         ballpos = { (float)ballX, (float)ballY };
 
@@ -107,7 +80,7 @@ int main() {
         
 
         if (CheckCollisionCircleRec(ballpos, ballRadius, paddle)) {
-            std::cout << "Prostim fungjsddjsndsd" << std::endl;
+            std::cout << "Collision" << std::endl;
             DrawText("Collision", 400, 400, 20, RED);
         }
     
