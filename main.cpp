@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <iostream>
+#include <string>
 
 int main() {
 
@@ -12,19 +13,32 @@ int main() {
 
     Color firstcolor = {253, 253, 253, 255};
     Color secondcolor = {42, 246, 255, 255};
+    Color green = {20, 160, 133, 255};
 
 
+    
     int ballX = 400;
     int ballY = 400;
+    float ballRadius = 20;
+
+    Vector2 ballpos = { (float)ballX, (float)ballY };
+
+    Rectangle paddle = { 300.0f, 600.0f, 200.0f, 20.0f }; 
+
+
+
+    int colliderY = 200;
+    int colliderX = 200;
+
     int speed = 5;
-    Color green = {20, 160, 133, 255};
+
+    
 
     InitWindow(screen_width, screen_height, "Window");
     Font customFont = LoadFontEx("resources/font/Minecraft.ttf", 32, NULL, 0);
 
     Image bgImage = LoadImage("resources/assets/world_tileset.png");
 
-    ImageResize(&bgImage, 1200, 1200);
 
     Texture2D bgTexture = LoadTextureFromImage(bgImage);
 
@@ -86,13 +100,24 @@ int main() {
             ballY = death;
         }
 
+        ballpos = { (float)ballX, (float)ballY };
+
+        ClearBackground(RAYWHITE);
+        DrawRectangleRec(paddle, BLACK);
+        
+
+        if (CheckCollisionCircleRec(ballpos, ballRadius, paddle)) {
+            std::cout << "Prostim fungjsddjsndsd" << std::endl;
+            DrawText("Collision", 400, 400, 20, RED);
+        }
+    
+
         // Drawing
         BeginDrawing();
 
         DrawTexture(bgTexture, 10, 50, WHITE);
 
-        ClearBackground(RAYWHITE);
-        DrawCircle(ballX, ballY, 20, RED);
+        DrawCircleV(ballpos, ballRadius, RED);
         
         DrawTextEx(customFont, TextFormat("X: %d Y: %d", ballY, ballX), Vector2{10, 7}, 32, 2, RED);
 
