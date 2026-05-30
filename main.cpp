@@ -9,8 +9,6 @@ int main() {
 
     int death = 0;
 
-
-
     Color firstcolor = {253, 253, 253, 255};
     Color secondcolor = {42, 246, 255, 255};
     Color green = {20, 160, 133, 255};
@@ -30,7 +28,10 @@ int main() {
     int colliderY = 200;
     int colliderX = 200;
 
+
     int speed = 5;
+
+    int currentspeed = speed;
 
     
 
@@ -55,17 +56,16 @@ int main() {
         std::cout << "Test" << std::endl;
         std::cout << ballY << " " << ballX << std::endl;
 
-        // movement
-        if(IsKeyDown(KEY_A)) { std::cout << "Pressed A" << std::endl; ballX -= speed; }
-        if(IsKeyDown(KEY_W)) { std::cout << "Pressed W" << std::endl; ballY -= speed; }
-        if(IsKeyDown(KEY_D)) { std::cout << "Pressed D" << std::endl; ballX += speed; }
-        if(IsKeyDown(KEY_S)) { std::cout << "Pressed S" << std::endl; ballY += speed; }
+        // new movement - X axis
+        if(IsKeyDown(KEY_A)) { ballX -= currentspeed; }
+        if(IsKeyDown(KEY_D)) { ballX += currentspeed; }
 
-        // sprint
-        if(IsKeyDown(KEY_W) && IsKeyDown(KEY_LEFT_SHIFT)) { ballY -= speed +2; }
-        if(IsKeyDown(KEY_A) && IsKeyDown(KEY_LEFT_SHIFT)) { ballX -= speed +2; }
-        if(IsKeyDown(KEY_S) && IsKeyDown(KEY_LEFT_SHIFT)) { ballY += speed +2; }
-        if(IsKeyDown(KEY_D) && IsKeyDown(KEY_LEFT_SHIFT)) { ballX += speed +2; }
+        // new movement - Y axis
+        if(IsKeyDown(KEY_W)) { ballY -= currentspeed; }
+        if(IsKeyDown(KEY_S)) { ballY += currentspeed; }
+
+        // new sprint method
+        if(IsKeyDown(KEY_LEFT_SHIFT)) { currentspeed = speed + 2; }
 
         // border
         if(ballX <= death) { ballX = screen_width; }
@@ -82,6 +82,9 @@ int main() {
         if (CheckCollisionCircleRec(ballpos, ballRadius, paddle)) {
             std::cout << "Collision" << std::endl;
             DrawText("Collision", 400, 400, 20, RED);
+            
+
+            
         }
     
 
