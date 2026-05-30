@@ -2,6 +2,40 @@
 #include <iostream>
 #include <string>
 
+
+    const int MAP_WIDTH = 25;
+    const int MAP_HEIGHT = 25;
+    const int TILE_SIZE = 32;
+
+    int worldMap[25][25] = {
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+};
+
+
 int main() {
 
     int screen_width = 800;
@@ -12,6 +46,8 @@ int main() {
     Color firstcolor = {253, 253, 253, 255};
     Color secondcolor = {42, 246, 255, 255};
     Color green = {20, 160, 133, 255};
+
+    bool collision = false;
 
 
     
@@ -29,9 +65,7 @@ int main() {
     int colliderX = 200;
 
 
-    int speed = 5;
-
-    int currentspeed = speed;
+    const int speed = 5;
 
     
 
@@ -40,15 +74,21 @@ int main() {
 
     Image bgImage = LoadImage("resources/assets/world_tileset.png");
 
+    ImageResize(&bgImage, 550, 550); 
+
+    Rectangle grassSource = { 0.0f, 0.0f, 64.0f, 64.0f };
+    Rectangle wallSource = { 64.0f, 0.0f, 64.0f, 64.0f };
+
+
 
     Texture2D bgTexture = LoadTextureFromImage(bgImage);
 
 
 
     SetTargetFPS(60);
+
     // Game loop
     while(WindowShouldClose() == false) {
-        SetConfigFlags(FLAG_FULLSCREEN_MODE);  
         
         // Event handling
         
@@ -57,15 +97,14 @@ int main() {
         std::cout << ballY << " " << ballX << std::endl;
 
         // new movement - X axis
-        if(IsKeyDown(KEY_A)) { ballX -= currentspeed; }
-        if(IsKeyDown(KEY_D)) { ballX += currentspeed; }
+        if(IsKeyDown(KEY_A)) { ballX -= speed; }
+        if(IsKeyDown(KEY_D)) { ballX += speed; }
 
         // new movement - Y axis
-        if(IsKeyDown(KEY_W)) { ballY -= currentspeed; }
-        if(IsKeyDown(KEY_S)) { ballY += currentspeed; }
+        if(IsKeyDown(KEY_W)) { ballY -= speed; }
+        if(IsKeyDown(KEY_S)) { ballY += speed; }
 
         // new sprint method
-        if(IsKeyDown(KEY_LEFT_SHIFT)) { currentspeed = speed + 2; }
 
         // border
         if(ballX <= death) { ballX = screen_width; }
@@ -75,27 +114,71 @@ int main() {
 
         ballpos = { (float)ballX, (float)ballY };
 
-        ClearBackground(RAYWHITE);
-        DrawRectangleRec(paddle, BLACK);
-        
+
+
+        ballpos = { float(ballX), float(ballY) };
+
+
 
         if (CheckCollisionCircleRec(ballpos, ballRadius, paddle)) {
             std::cout << "Collision" << std::endl;
             DrawText("Collision", 400, 400, 20, RED);
             
+            if (collision == false) {
+                std::cout << "True" << std::endl;
+                collision = true;
+            }
 
-            
+            if(IsKeyDown(KEY_S)) { 
+                ballY = paddle.y - ballRadius; 
+            }
+    
+
+            else if(IsKeyDown(KEY_W)) { 
+                ballY = paddle.y + paddle.height + ballRadius; 
+            }
+
+            else if(IsKeyDown(KEY_A)) { 
+                ballX = paddle.x + paddle.width + ballRadius; 
+            }
+
+            else if(IsKeyDown(KEY_D)) { 
+                ballX = paddle.x - ballRadius; 
+
+
+            }
         }
+
+        ballpos = { float(ballX), float(ballY) };
+
+        while (speed == 1){
+            std::cout << "test";
+        }
+
     
 
         // Drawing
         BeginDrawing();
+        ClearBackground(BLACK);
+        for (int y = 0; y < MAP_HEIGHT; y++) {
+            for (int x = 0; x < MAP_WIDTH; x++) {
+                Vector2 screenPos = { (float)(x * TILE_SIZE), float(y * TILE_SIZE) };
 
-        DrawTexture(bgTexture, 10, 50, WHITE);
+                if (worldMap[y][x] == 1) {
+                    DrawTextureRec(bgTexture, wallSource, screenPos, WHITE);
+                }
+                else if (worldMap[y][x] == 0) {
+                    DrawTextureRec(bgTexture, grassSource, screenPos, WHITE);
+                }
+            }
+        }
 
+        EndTextureMode();
         DrawCircleV(ballpos, ballRadius, RED);
+        DrawRectangleRec(paddle, BLACK);
         
         DrawTextEx(customFont, TextFormat("X: %d Y: %d", ballY, ballX), Vector2{10, 7}, 32, 2, RED);
+        DrawText(TextFormat("%d", GetFPS(), "FPS"), 400, 300, 50, RED);
 
         EndDrawing();
     }
